@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSXGraph Demo: Mean Value Theorem</title>
+
+    <script type="text/javascript" charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/1.2.2/jsxgraphcore.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.2.2/distrib/jsxgraph.css" />
+</head>
+<body>
+    <h1 style="text-align: center;">Mean Value Theorem</h1>
+    <div id="box" class="jxgbox" style="width:600px; height:600px; background-color: #eeeeee; border:solid 0px #ffffff; margin:auto"></div>
+    <script type="text/javascript">
+        var board = JXG.JSXGraph.initBoard('box', { boundingbox: [-5, 10, 7, -6], axis: true, showcopyright: false });
+        board.suspendUpdate();
+        var p = [];
+        p[0] = board.create('point', [-1, -2], { size: 2 });
+        p[1] = board.create('point', [6, 5], { size: 2 });
+        p[2] = board.create('point', [-0.5, 1], { size: 2 });
+        p[3] = board.create('point', [3, 3], { size: 2 });
+        var f = JXG.Math.Numerics.lagrangePolynomial(p);
+        var graph = board.create('functiongraph', [f, -10, 10]);
+
+        var g = function(x) {
+            return JXG.Math.Numerics.D(f)(x) - (p[1].Y() - p[0].Y()) / (p[1].X() - p[0].X());
+        };
+
+        var r = board.create('glider', [
+                            function() { return JXG.Math.Numerics.root(g, (p[0].X()+p[1].X()) * 0.5); },
+                            function() { return f(JXG.Math.Numerics.root(g, (p[0].X()+p[1].X()) * 0.5)); },
+                            graph], { name:' ', size:4, fixed:true } );
+        board.create('tangent', [r], { strokeColor:'#ff0000' } );
+        line = board.create('line', [p[0], p[1]], { strokeColor:'#ff0000', dash: 1 } );
+
+        board.unsuspendUpdate();
+    </script>
+</body>
+</html>
