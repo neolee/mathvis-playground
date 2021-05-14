@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSXGraph Demo: Morley's Theorem</title>
+
+    <script type="text/javascript" charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/jsxgraph/1.2.2/jsxgraphcore.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/jsxgraph@1.2.2/distrib/jsxgraph.css" />
+</head>
+<body>
+    <div id="box" class="jxgbox" style="width:600px; height:600px; background-color: #eeeeee; border:solid 0px #ffffff; margin:auto"></div>
+    <script type="text/javascript">
+        var board = JXG.JSXGraph.initBoard('box', {
+                boundingbox: [4, 18, 14, 8],
+                keepaspectreatio: true,
+                axis: false,
+                grid: false,
+                shownavigation: false,
+                showcopyright: false
+            });
+        // construction
+        board.suspendUpdate(); 
+        var points = new Array();
+        points[0] =  board.create('point', [ 6.0, 9.5], { name: 'A', fillColor: '#ffffff', strokeColor: '#000000', size:1 });
+        points[1] =  board.create('point', [12.5,12.5], { name: 'B', fillColor: '#ffffff', strokeColor: '#000000', size:1 });
+        points[2] = board.create('point', [ 7.0,17.0], { name: 'C', fillColor: '#ffffff', strokeColor: '#000000', size:1 });
+        var poly = new Array();
+        poly[0] =  board.create('polygon', [points[0], points[1], points[2]], { name: '', borders: { strokeColor: '#ffffff' }, fillcolor: '#555599' });
+        function morley(pol, col) {
+            var lne = new Array();
+            for(var i = 0; i < 3; i++) {
+                trisect(pol.vertices[(0+i)%3], pol.vertices[(2+i)%3], pol.vertices[(1+i)%3], lne);
+            }
+            var pte = new Array();
+            for(var i = 0; i < 3; i++) {
+                pte[i] = board.create('intersection', [lne[i], lne[i+3], 0], { visible:false });
+            }
+            board.create('polygon', [pol.vertices[0], pte[0], pte[2]], { name:'', borders: { strokeColor: '#ffffff' }, fillcolor: '#555599', opacity: 0.8 });
+            board.create('polygon', [pol.vertices[1], pte[2], pte[1]], { name:'', borders: { strokeColor: '#ffffff' }, fillcolor: '#555599', opacity: 0.8 });
+            board.create('polygon', [pol.vertices[2], pte[1], pte[0]], { name:'', borders: { strokeColor: '#ffffff' }, fillcolor: '#555599', opacity: 0.8 });
+            var mpl = board.create('polygon', pte, { name:'', borders: { visible: false }, fillColor: col, opacity: 1 });
+        }
+        function trisect(a, c, b, l) {
+            var an = board.create('angle', [a, c, b], { visible:false });
+            var a2 = board.create('angle', [b, c, a], { visible:false });
+            var t1 = board.create('transform', [function() { if (an.Value() < (Math.PI)) { return an.Value()/3; } else { return -a2.Value()/3; }}, an.point1], { type: 'rotate' });
+            var t2 = board.create('transform', [function() { if (an.Value() < (Math.PI)) { return an.Value()*2/3; } else { return -a2.Value()*2/3; }} ,an.point1], { type: 'rotate' });
+            var p1 = board.create('point', [an.point2, t1], { visible:false });
+            var p2 = board.create('point', [an.point2, t2], { visible:false });
+            l.push(board.create('line', [an.point1, p1], { visible:false }));
+            l.push(board.create('line', [an.point1, p2], { visible:false }));
+        }
+        morley(poly[0], '#ff9944');  
+        board.unsuspendUpdate();
+    </script>
+</body>
+</html>
