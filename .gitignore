@@ -3,9 +3,9 @@ temp
 tmp
 local
 
-codex
-
 .DS_Store
+
+.ipynb_checkpoints
 
 .nrepl-port
 .lein-repl-history
