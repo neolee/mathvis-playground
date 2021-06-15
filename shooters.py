@@ -1,3 +1,4 @@
+import sys
 from random import random
 
 MAGAZINE_CAP = 12
@@ -6,6 +7,8 @@ B = 6
 C = 4
 
 VERBOSE = False
+
+TOTAL = 10000
 
 def log(s):
     if VERBOSE:
@@ -80,26 +83,30 @@ class Game:
                 break
 
 
-count = 10000
+if __name__ == "__main__":
+    running_count = TOTAL
+    if len(sys.argv) > 1:
+        running_count = int(sys.argv[1])
 
-a = Player('Jun', A)
-b = Player('Rory', B)
-c = Player('Max', C)
+    a = Player('Jun', A)
+    b = Player('Rory', B)
+    c = Player('Max', C)
 
-def reload():
-    a.bullets = A
-    b.bullets = B
-    c.bullets = C
+    def reload():
+        a.bullets = A
+        b.bullets = B
+        c.bullets = C
 
-while count > 0:
-    g = Game()
+    n = 1
+    while n <= running_count:
+        g = Game()
+        reload()
+        g.add(a)
+        g.add(b)
+        g.add(c)
+        log(f"Simulation #{n}: {[f'{x}' for x in g.players]}")
+        g.run()
+        n += 1
+        
     reload()
-    g.add(a)
-    g.add(b)
-    g.add(c)
-    log(f"Simulation #{101-count}: {[f'{x}' for x in g.players]}")
-    g.run()
-    count -= 1
-    
-reload()
-print(f"Winning Board: {a} - {a.score}, {b} - {b.score}, {c} - {c.score}")
+    print(f"Winning Board: {a} - {a.score}, {b} - {b.score}, {c} - {c.score}")
