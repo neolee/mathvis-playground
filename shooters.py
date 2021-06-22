@@ -1,7 +1,7 @@
 import sys
 from random import random
 
-MAGAZINE_CAP = 12
+MAGAZINE_CAP = 10
 A = 8
 B = 6
 C = 4
