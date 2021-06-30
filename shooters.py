@@ -88,9 +88,9 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         running_count = int(sys.argv[1])
 
-    a = Player('Jun', A)
-    b = Player('Rory', B)
-    c = Player('Max', C)
+    a = Player('大多数', A)
+    b = Player('求稳派', B)
+    c = Player('数学家', C)
 
     def reload():
         a.bullets = A
